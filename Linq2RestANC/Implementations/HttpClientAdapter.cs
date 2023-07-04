@@ -12,22 +12,20 @@
 
 namespace Linq2Rest.Implementations
 {
-    using System;
-    using System.Diagnostics.Contracts;
-    using System.IO;
-    using System.Net;
     using Linq2Rest.Provider;
+    using System;
+    using System.IO;
     using System.Net.Http;
 
     /// <summary>
     /// Takes a System.Net.Http.HttpClient and wraps it in an IHttpRequest Implementation.
     /// </summary>
     internal class HttpClientAdapter : IHttpRequest
-	{
-		/// <summary>
-		/// The HttpWebRequest we are adapting to IHttpRequest.
-		/// </summary>
-		public HttpClient HttpClient { get; private set; }
+    {
+        /// <summary>
+        /// The HttpWebRequest we are adapting to IHttpRequest.
+        /// </summary>
+        public HttpClient HttpClient { get; private set; }
 
         public HttpRequestMessage HttpMessage { get; private set; }
 
@@ -35,11 +33,11 @@ namespace Linq2Rest.Implementations
         private string responseMimeType { get; set; }
         private MemoryStream requestStream { get; set; }
 
-		public HttpClientAdapter(HttpClient httpClient, HttpRequestMessage httpMessage)
-		{
-			HttpClient = httpClient;
+        public HttpClientAdapter(HttpClient httpClient, HttpRequestMessage httpMessage)
+        {
+            HttpClient = httpClient;
             HttpMessage = httpMessage ?? new HttpRequestMessage();
-		}
+        }
 
         //private HttpClientAdapter()
         //{ }
@@ -62,50 +60,50 @@ namespace Linq2Rest.Implementations
             }
         }
 
-		/// <summary>
-		/// Creates a basic HttpWebRequest that can then be built off of depending on what other functionality is needed.
-		/// </summary>
-		/// <param name="uri">The uri to send the request to.</param>
-		/// <param name="method">The Http Request Method.</param>
-		/// <param name="requestMimeType">The MIME type of the data we are sending.</param>
-		/// <param name="responseMimeType">The MIME we accept in response.</param>
-		/// <returns>Returns an HttpWebRequest initialized with the given parameters.</returns>
-		public static HttpClientAdapter CreateHttpClientAdapter(Uri uri, Provider.HttpMethod method, string responseMimeType, string requestMimeType)
-		{
-			CustomContract.Requires(uri != null);
-			CustomContract.Requires(responseMimeType != null);
-			CustomContract.Requires(method != Provider.HttpMethod.None);
+        /// <summary>
+        /// Creates a basic HttpWebRequest that can then be built off of depending on what other functionality is needed.
+        /// </summary>
+        /// <param name="uri">The uri to send the request to.</param>
+        /// <param name="method">The Http Request Method.</param>
+        /// <param name="requestMimeType">The MIME type of the data we are sending.</param>
+        /// <param name="responseMimeType">The MIME we accept in response.</param>
+        /// <returns>Returns an HttpWebRequest initialized with the given parameters.</returns>
+        public static HttpClientAdapter CreateHttpClientAdapter(Uri uri, Provider.HttpMethod method, string responseMimeType, string requestMimeType)
+        {
+            CustomContract.Requires(uri != null);
+            CustomContract.Requires(responseMimeType != null);
+            CustomContract.Requires(method != Provider.HttpMethod.None);
 
-			requestMimeType = requestMimeType ?? responseMimeType;
+            requestMimeType = requestMimeType ?? responseMimeType;
 
             var httpMessage = new HttpRequestMessage(AsNetMethod(method), uri);
 
             var httpClientAdapter = new HttpClientAdapter(new HttpClient(), httpMessage);
 
-			if (method == Provider.HttpMethod.Post || method == Provider.HttpMethod.Put)
-			{
+            if (method == Provider.HttpMethod.Post || method == Provider.HttpMethod.Put)
+            {
                 httpClientAdapter.requestMimeType = requestMimeType;
             }
 
-			httpClientAdapter.HttpClient.DefaultRequestHeaders.Add("Accept", responseMimeType);
+            httpClientAdapter.HttpClient.DefaultRequestHeaders.Add("Accept", responseMimeType);
 
-			return httpClientAdapter;
-		}
+            return httpClientAdapter;
+        }
 
-		public Stream GetRequestStream()
-		{
+        public Stream GetRequestStream()
+        {
             requestStream = new MemoryStream();
             return requestStream;
-		}
+        }
 
-		public Stream GetResponseStream()
-		{
+        public Stream GetResponseStream()
+        {
             if (requestStream == null)
                 requestStream = new MemoryStream();
             var content = new StreamContent(requestStream);
             HttpMessage.Content = content;
             var resp = HttpClient.SendAsync(HttpMessage).Result;
             return resp.Content.ReadAsStreamAsync().Result;
-		}
-	}
+        }
+    }
 }

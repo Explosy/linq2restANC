@@ -12,27 +12,26 @@
 
 namespace Linq2Rest.Provider.Writers
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Linq.Expressions;
+    using System;
+    using System.Linq.Expressions;
 
-	internal class StringTrimMethodWriter : IMethodCallWriter
-	{
-		public bool CanHandle(MethodCallExpression expression)
-		{
-			CustomContract.Assert(expression.Method != null);
+    internal class StringTrimMethodWriter : IMethodCallWriter
+    {
+        public bool CanHandle(MethodCallExpression expression)
+        {
+            CustomContract.Assert(expression.Method != null);
 
-			return expression.Method.DeclaringType == typeof(string)
-				   && expression.Method.Name == "Trim";
-		}
+            return expression.Method.DeclaringType == typeof(string)
+                   && expression.Method.Name == "Trim";
+        }
 
-		public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
-		{
-			var obj = expression.Object;
+        public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
+        {
+            var obj = expression.Object;
 
-			CustomContract.Assume(obj != null);
+            CustomContract.Assume(obj != null);
 
-			return string.Format("trim({0})", expressionWriter(obj));
-		}
-	}
+            return string.Format("trim({0})", expressionWriter(obj));
+        }
+    }
 }

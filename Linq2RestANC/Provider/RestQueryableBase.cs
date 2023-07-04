@@ -12,85 +12,85 @@
 
 namespace Linq2Rest.Provider
 {
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using System.Diagnostics.Contracts;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using Linq2Rest.Provider.Writers;
+    using Linq2Rest.Provider.Writers;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Linq.Expressions;
 
-	internal class RestQueryableBase<T> : IOrderedQueryable<T>, IDisposable
-	{
-		public RestQueryableBase(IRestClient client, ISerializerFactory serializerFactory, IMemberNameResolver memberNameResolver, IEnumerable<IValueWriter> valueWriters)
-		{
-			CustomContract.Requires<ArgumentException>(client != null);
-			CustomContract.Requires<ArgumentException>(serializerFactory != null);
-			CustomContract.Requires<ArgumentException>(memberNameResolver != null);
-			CustomContract.Requires<ArgumentException>(valueWriters != null);
+    internal class RestQueryableBase<T> : IOrderedQueryable<T>, IDisposable
+    {
+        public RestQueryableBase(IRestClient client, ISerializerFactory serializerFactory, IMemberNameResolver memberNameResolver, IEnumerable<IValueWriter> valueWriters)
+        {
+            CustomContract.Requires<ArgumentException>(client != null);
+            CustomContract.Requires<ArgumentException>(serializerFactory != null);
+            CustomContract.Requires<ArgumentException>(memberNameResolver != null);
+            CustomContract.Requires<ArgumentException>(valueWriters != null);
 
-			Client = client;
-			SerializerFactory = serializerFactory;
-			MemberNameResolver = memberNameResolver;
-			ValueWriters = valueWriters.ToArray();
-		}
+            Client = client;
+            SerializerFactory = serializerFactory;
+            MemberNameResolver = memberNameResolver;
+            ValueWriters = valueWriters.ToArray();
+        }
 
-		/// <summary>
-		/// 	<see cref="Type"/> of T in IQueryable of T.
-		/// </summary>
-		public Type ElementType
-		{
-			get { return typeof(T); }
-		}
+        /// <summary>
+        /// 	<see cref="Type"/> of T in IQueryable of T.
+        /// </summary>
+        public Type ElementType
+        {
+            get { return typeof(T); }
+        }
 
-		/// <summary>
-		/// 	The expression tree.
-		/// </summary>
-		public Expression Expression { get; protected set; }
+        /// <summary>
+        /// 	The expression tree.
+        /// </summary>
+        public Expression Expression { get; protected set; }
 
-		/// <summary>
-		/// 	IQueryProvider part of RestQueryable.
-		/// </summary>
-		public IQueryProvider Provider { get; protected set; }
+        /// <summary>
+        /// 	IQueryProvider part of RestQueryable.
+        /// </summary>
+        public IQueryProvider Provider { get; protected set; }
 
-		internal IRestClient Client { get; private set; }
+        internal IRestClient Client { get; private set; }
 
-		internal ISerializerFactory SerializerFactory { get; set; }
+        internal ISerializerFactory SerializerFactory { get; set; }
 
-		internal IMemberNameResolver MemberNameResolver { get; private set; }
+        internal IMemberNameResolver MemberNameResolver { get; private set; }
 
-		internal IValueWriter[] ValueWriters { get; private set; }
+        internal IValueWriter[] ValueWriters { get; private set; }
 
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-		public IEnumerator<T> GetEnumerator()
-		{
-			var enumerable = Provider.Execute<IEnumerable<T>>(Expression);
-			return (enumerable ?? new T[0]).GetEnumerator();
-		}
+        public IEnumerator<T> GetEnumerator()
+        {
+            var enumerable = Provider.Execute<IEnumerable<T>>(Expression);
+            return (enumerable ?? new T[0]).GetEnumerator();
+        }
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return Provider.Execute<IEnumerable>(Expression).GetEnumerator();
-		}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Provider.Execute<IEnumerable>(Expression).GetEnumerator();
+        }
 
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				Client.Dispose();
-			}
-		}
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Client.Dispose();
+            }
+        }
 
-		[ContractInvariantMethod]
-		private void Invariants()
-		{
-			CustomContract.Invariant(Client != null);
-			CustomContract.Invariant(Expression != null);
-		}
-	}
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            CustomContract.Invariant(Client != null);
+            CustomContract.Invariant(Expression != null);
+        }
+    }
 }

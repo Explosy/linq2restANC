@@ -12,35 +12,35 @@
 
 namespace Linq2Rest.Provider.Writers
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Linq.Expressions;
+    using System;
+    using System.Diagnostics.Contracts;
+    using System.Linq.Expressions;
 
-	[ContractClass(typeof(MethodCallWriterContracts))]
-	internal interface IMethodCallWriter
-	{
-		bool CanHandle(MethodCallExpression expression);
+    [ContractClass(typeof(MethodCallWriterContracts))]
+    internal interface IMethodCallWriter
+    {
+        bool CanHandle(MethodCallExpression expression);
 
-		string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter);
-	}
+        string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter);
+    }
 
-	[ContractClassFor(typeof(IMethodCallWriter))]
-	internal abstract class MethodCallWriterContracts : IMethodCallWriter
-	{
-		public bool CanHandle(MethodCallExpression expression)
-		{
-			CustomContract.Requires(expression != null);
+    [ContractClassFor(typeof(IMethodCallWriter))]
+    internal abstract class MethodCallWriterContracts : IMethodCallWriter
+    {
+        public bool CanHandle(MethodCallExpression expression)
+        {
+            CustomContract.Requires(expression != null);
 
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
-		public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
-		{
-			CustomContract.Requires(expression != null);
-			CustomContract.Requires(expressionWriter != null);
-			CustomContract.Ensures(CustomContract.Result<string>() != null);
-			
-			throw new NotImplementedException();
-		}
-	}
+        public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
+        {
+            CustomContract.Requires(expression != null);
+            CustomContract.Requires(expressionWriter != null);
+            CustomContract.Ensures(CustomContract.Result<string>() != null);
+
+            throw new NotImplementedException();
+        }
+    }
 }

@@ -12,45 +12,45 @@
 
 namespace Linq2Rest.Provider.Writers
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Linq.Expressions;
+    using System;
+    using System.Diagnostics.Contracts;
+    using System.Linq.Expressions;
 
-	internal class DefaultMethodWriter : IMethodCallWriter
-	{
-		private readonly ParameterValueWriter _valueWriter;
+    internal class DefaultMethodWriter : IMethodCallWriter
+    {
+        private readonly ParameterValueWriter _valueWriter;
 
-		public DefaultMethodWriter(ParameterValueWriter valueWriter)
-		{
-			CustomContract.Requires(valueWriter != null);
+        public DefaultMethodWriter(ParameterValueWriter valueWriter)
+        {
+            CustomContract.Requires(valueWriter != null);
 
-			_valueWriter = valueWriter;
-		}
+            _valueWriter = valueWriter;
+        }
 
-		public bool CanHandle(MethodCallExpression expression)
-		{
-			return true;
-		}
+        public bool CanHandle(MethodCallExpression expression)
+        {
+            return true;
+        }
 
-		public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
-		{
-			return _valueWriter.Write(GetValue(expression));
-		}
+        public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
+        {
+            return _valueWriter.Write(GetValue(expression));
+        }
 
-		private static object GetValue(Expression input)
-		{
-			CustomContract.Requires(input != null);
+        private static object GetValue(Expression input)
+        {
+            CustomContract.Requires(input != null);
 
-			var objectMember = Expression.Convert(input, typeof(object));
-			var getterLambda = Expression.Lambda<Func<object>>(objectMember).Compile();
+            var objectMember = Expression.Convert(input, typeof(object));
+            var getterLambda = Expression.Lambda<Func<object>>(objectMember).Compile();
 
-			return getterLambda();
-		}
+            return getterLambda();
+        }
 
-		[ContractInvariantMethod]
-		private void Invariants()
-		{
-			CustomContract.Invariant(_valueWriter != null);
-		}
-	}
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            CustomContract.Invariant(_valueWriter != null);
+        }
+    }
 }

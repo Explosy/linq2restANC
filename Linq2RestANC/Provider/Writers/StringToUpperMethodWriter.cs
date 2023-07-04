@@ -12,27 +12,26 @@
 
 namespace Linq2Rest.Provider.Writers
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Linq.Expressions;
+    using System;
+    using System.Linq.Expressions;
 
-	internal class StringToUpperMethodWriter : IMethodCallWriter
-	{
-		public bool CanHandle(MethodCallExpression expression)
-		{
-			CustomContract.Assert(expression.Method != null);
+    internal class StringToUpperMethodWriter : IMethodCallWriter
+    {
+        public bool CanHandle(MethodCallExpression expression)
+        {
+            CustomContract.Assert(expression.Method != null);
 
-			return expression.Method.DeclaringType == typeof(string)
-				   && (expression.Method.Name == "ToUpper" || expression.Method.Name == "ToUpperInvariant");
-		}
+            return expression.Method.DeclaringType == typeof(string)
+                   && (expression.Method.Name == "ToUpper" || expression.Method.Name == "ToUpperInvariant");
+        }
 
-		public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
-		{
-			var obj = expression.Object;
+        public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
+        {
+            var obj = expression.Object;
 
-			CustomContract.Assume(obj != null);
+            CustomContract.Assume(obj != null);
 
-			return string.Format("toupper({0})", expressionWriter(obj));
-		}
-	}
+            return string.Format("toupper({0})", expressionWriter(obj));
+        }
+    }
 }

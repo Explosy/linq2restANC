@@ -12,23 +12,22 @@
 
 namespace Linq2Rest.Implementations
 {
-	using System;
-	using System.Diagnostics.Contracts;
+    using System;
 
-	/// <summary>
-	/// Defines a REST client implementation for JSON requests.
-	/// </summary>
-	public class XmlRestClient : RestClientBase
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="XmlRestClient"/> class.
-		/// </summary>
-		/// <param name="uri">The base <see cref="Uri"/> for the REST service.</param>
-		public XmlRestClient(Uri uri)
-			: base(uri, StringConstants.XmlMimeType)
-		{
-			CustomContract.Requires<ArgumentNullException>(uri != null);
-			CustomContract.Requires<ArgumentException>(uri.Scheme == HttpUtility.UriSchemeHttp || uri.Scheme == HttpUtility.UriSchemeHttps);
-		}
-	}
+    /// <summary>
+    /// Defines a REST client implementation for JSON requests.
+    /// </summary>
+    public class XmlRestClient : RestClientBase
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlRestClient"/> class.
+        /// </summary>
+        /// <param name="uri">The base <see cref="Uri"/> for the REST service.</param>
+        public XmlRestClient(Uri uri)
+            : base(uri, StringConstants.XmlMimeType)
+        {
+            CustomContract.Requires<ArgumentNullException>(uri != null);
+            CustomContract.Requires<ArgumentException>(uri.Scheme == HttpUtility.UriSchemeHttp || uri.Scheme == HttpUtility.UriSchemeHttps);
+        }
+    }
 }

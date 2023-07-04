@@ -12,65 +12,65 @@
 
 namespace Linq2Rest.Provider.Writers
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics.Contracts;
-	using System.Globalization;
-	using System.Linq;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Globalization;
+    using System.Linq;
 
 #if NETFX_CORE
-	using System.Reflection;
+    using System.Reflection;
 #endif
 
-	internal class ParameterValueWriter
-	{
-		private readonly IList<IValueWriter> _valueWriters;
+    internal class ParameterValueWriter
+    {
+        private readonly IList<IValueWriter> _valueWriters;
 
-		public ParameterValueWriter(IEnumerable<IValueWriter> valueWriters)
-		{
-			CustomContract.Requires(valueWriters != null);
+        public ParameterValueWriter(IEnumerable<IValueWriter> valueWriters)
+        {
+            CustomContract.Requires(valueWriters != null);
 
-			_valueWriters = valueWriters.Concat(
-				new IValueWriter[]
-				{
-					new EnumValueWriter(),
-					new StringValueWriter(),
-					new BooleanValueWriter(),
-					new IntValueWriter(),
-					new LongValueWriter(),
-					new ShortValueWriter(),
-					new UnsignedIntValueWriter(),
-					new UnsignedLongValueWriter(),
-					new UnsignedShortValueWriter(),
-					new ByteArrayValueWriter(),
-					new StreamValueWriter(),
-					new DecimalValueWriter(),
-					new DoubleValueWriter(),
-					new SingleValueWriter(),
-					new ByteValueWriter(),
-					new GuidValueWriter(),
-					new DateTimeValueWriter(),
-					new TimeSpanValueWriter(),
-					new DateTimeOffsetValueWriter()
-				})
-				.ToList();
-		}
+            _valueWriters = valueWriters.Concat(
+                new IValueWriter[]
+                {
+                    new EnumValueWriter(),
+                    new StringValueWriter(),
+                    new BooleanValueWriter(),
+                    new IntValueWriter(),
+                    new LongValueWriter(),
+                    new ShortValueWriter(),
+                    new UnsignedIntValueWriter(),
+                    new UnsignedLongValueWriter(),
+                    new UnsignedShortValueWriter(),
+                    new ByteArrayValueWriter(),
+                    new StreamValueWriter(),
+                    new DecimalValueWriter(),
+                    new DoubleValueWriter(),
+                    new SingleValueWriter(),
+                    new ByteValueWriter(),
+                    new GuidValueWriter(),
+                    new DateTimeValueWriter(),
+                    new TimeSpanValueWriter(),
+                    new DateTimeOffsetValueWriter()
+                })
+                .ToList();
+        }
 
-		public string Write(object value)
-		{
-			if (value == null)
-			{
-				return "null";
-			}
+        public string Write(object value)
+        {
+            if (value == null)
+            {
+                return "null";
+            }
 
-			var type = value.GetType();
+            var type = value.GetType();
 
-			var writer = _valueWriters.FirstOrDefault(x => x.Handles(type));
+            var writer = _valueWriters.FirstOrDefault(x => x.Handles(type));
 
-			if (writer != null)
-			{
-				return writer.Write(value);
-			}
+            if (writer != null)
+            {
+                return writer.Write(value);
+            }
 
 #if !NETFX_CORE
 			if (typeof(Nullable<>).IsAssignableFrom(type))
@@ -81,22 +81,22 @@ namespace Linq2Rest.Provider.Writers
 			}
 
 #else
-			var typeInfo = type.GetTypeInfo();
-			if (typeof(Nullable<>).GetTypeInfo().IsAssignableFrom(typeInfo))
-			{
-				var genericParameter = typeInfo.GenericTypeArguments[0];
+            var typeInfo = type.GetTypeInfo();
+            if (typeof(Nullable<>).GetTypeInfo().IsAssignableFrom(typeInfo))
+            {
+                var genericParameter = typeInfo.GenericTypeArguments[0];
 
-				return Write(Convert.ChangeType(value, genericParameter, CultureInfo.CurrentCulture));
-			}
+                return Write(Convert.ChangeType(value, genericParameter, CultureInfo.CurrentCulture));
+            }
 #endif
 
-			return value.ToString();
-		}
+            return value.ToString();
+        }
 
-		[ContractInvariantMethod]
-		private void Invariants()
-		{
-			CustomContract.Invariant(_valueWriters != null);
-		}
-	}
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            CustomContract.Invariant(_valueWriters != null);
+        }
+    }
 }

@@ -12,78 +12,78 @@
 
 namespace Linq2Rest.Parser
 {
-	using System;
-	using System.Diagnostics.Contracts;
+    using System;
+    using System.Diagnostics.Contracts;
 
-	internal class TokenSet
-	{
-		private string _left;
-		private string _operation;
-		private string _right;
+    internal class TokenSet
+    {
+        private string _left;
+        private string _operation;
+        private string _right;
 
-		public TokenSet()
-		{
-			_left = string.Empty;
-			_right = string.Empty;
-			_operation = string.Empty;
-		}
+        public TokenSet()
+        {
+            _left = string.Empty;
+            _right = string.Empty;
+            _operation = string.Empty;
+        }
 
-		public string Left
-		{
-			get
-			{
-				CustomContract.Ensures(CustomContract.Result<string>() != null);
-				return _left;
-			}
+        public string Left
+        {
+            get
+            {
+                CustomContract.Ensures(CustomContract.Result<string>() != null);
+                return _left;
+            }
 
-			set
-			{
-				CustomContract.Requires<ArgumentNullException>(value != null);
-				_left = value;
-			}
-		}
+            set
+            {
+                CustomContract.Requires<ArgumentNullException>(value != null);
+                _left = value;
+            }
+        }
 
-		public string Operation
-		{
-			get
-			{
-				CustomContract.Ensures(CustomContract.Result<string>() != null);
-				return _operation;
-			}
+        public string Operation
+        {
+            get
+            {
+                CustomContract.Ensures(CustomContract.Result<string>() != null);
+                return _operation;
+            }
 
-			set
-			{
-				CustomContract.Requires<ArgumentNullException>(value != null);
-				_operation = value;
-			}
-		}
+            set
+            {
+                CustomContract.Requires<ArgumentNullException>(value != null);
+                _operation = value;
+            }
+        }
 
-		public string Right
-		{
-			get
-			{
-				CustomContract.Ensures(CustomContract.Result<string>() != null);
-				return _right;
-			}
+        public string Right
+        {
+            get
+            {
+                CustomContract.Ensures(CustomContract.Result<string>() != null);
+                return _right;
+            }
 
-			set
-			{
-				CustomContract.Requires<ArgumentNullException>(value != null);
-				_right = value;
-			}
-		}
+            set
+            {
+                CustomContract.Requires<ArgumentNullException>(value != null);
+                _right = value;
+            }
+        }
 
-		public override string ToString()
-		{
-			return string.Format("{0} {1} {2}", Left, Operation, Right);
-		}
+        public override string ToString()
+        {
+            return string.Format("{0} {1} {2}", Left, Operation, Right);
+        }
 
-		[ContractInvariantMethod]
-		private void Invariants()
-		{
-			CustomContract.Invariant(_left != null);
-			CustomContract.Invariant(_right != null);
-			CustomContract.Invariant(_operation != null);
-		}
-	}
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            CustomContract.Invariant(_left != null);
+            CustomContract.Invariant(_right != null);
+            CustomContract.Invariant(_operation != null);
+        }
+    }
 }
