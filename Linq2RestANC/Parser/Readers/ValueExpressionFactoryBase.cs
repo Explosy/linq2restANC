@@ -17,16 +17,16 @@ namespace Linq2Rest.Parser.Readers
     using System.Reflection;
 
     internal abstract class ValueExpressionFactoryBase<T> : IValueExpressionFactory
-	{
-		public bool Handles(Type type)
-		{
+    {
+        public bool Handles(Type type)
+        {
 #if !NETFX_CORE
 			return typeof(T) == type;
 #else
-			return typeof(T).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
+            return typeof(T).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
 #endif
-		}
+        }
 
-		public abstract ConstantExpression Convert(string token);
-	}
+        public abstract ConstantExpression Convert(string token);
+    }
 }

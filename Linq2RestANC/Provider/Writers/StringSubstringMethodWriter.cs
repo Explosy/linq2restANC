@@ -12,50 +12,49 @@
 
 namespace Linq2Rest.Provider.Writers
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Linq.Expressions;
+    using System;
+    using System.Linq.Expressions;
 
-	internal class StringSubstringMethodWriter : IMethodCallWriter
-	{
-		public bool CanHandle(MethodCallExpression expression)
-		{
-			CustomContract.Assert(expression.Method != null);
+    internal class StringSubstringMethodWriter : IMethodCallWriter
+    {
+        public bool CanHandle(MethodCallExpression expression)
+        {
+            CustomContract.Assert(expression.Method != null);
 
-			return expression.Method.DeclaringType == typeof(string)
-				   && expression.Method.Name == "Substring";
-		}
+            return expression.Method.DeclaringType == typeof(string)
+                   && expression.Method.Name == "Substring";
+        }
 
-		public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
-		{
-			CustomContract.Assert(expression.Arguments != null);
-			CustomContract.Assume(expression.Arguments.Count > 0);
+        public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
+        {
+            CustomContract.Assert(expression.Arguments != null);
+            CustomContract.Assume(expression.Arguments.Count > 0);
 
-			var obj = expression.Object;
+            var obj = expression.Object;
 
-			CustomContract.Assume(obj != null);
+            CustomContract.Assume(obj != null);
 
-			if (expression.Arguments.Count == 1)
-			{
-				var argumentExpression = expression.Arguments[0];
+            if (expression.Arguments.Count == 1)
+            {
+                var argumentExpression = expression.Arguments[0];
 
-				CustomContract.Assume(argumentExpression != null);
+                CustomContract.Assume(argumentExpression != null);
 
-				return string.Format(
-					"substring({0}, {1})", expressionWriter(obj), expressionWriter(argumentExpression));
-			}
+                return string.Format(
+                    "substring({0}, {1})", expressionWriter(obj), expressionWriter(argumentExpression));
+            }
 
-			var firstArgument = expression.Arguments[0];
-			var secondArgument = expression.Arguments[1];
+            var firstArgument = expression.Arguments[0];
+            var secondArgument = expression.Arguments[1];
 
-			CustomContract.Assume(firstArgument != null);
-			CustomContract.Assume(secondArgument != null);
+            CustomContract.Assume(firstArgument != null);
+            CustomContract.Assume(secondArgument != null);
 
-			return string.Format(
-				"substring({0}, {1}, {2})", 
-				expressionWriter(obj), 
-				expressionWriter(firstArgument), 
-				expressionWriter(secondArgument));
-		}
-	}
+            return string.Format(
+                "substring({0}, {1}, {2})",
+                expressionWriter(obj),
+                expressionWriter(firstArgument),
+                expressionWriter(secondArgument));
+        }
+    }
 }

@@ -12,11 +12,10 @@
 
 namespace Linq2Rest.Implementations
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using Linq2Rest.Provider;
+    using Linq2Rest.Provider;
+    using System;
 
-	/// <summary>
+    /// <summary>
     /// Defines the XmlContext class.
     /// </summary>
     /// <typeparam name="T">The <see cref="Type"/> of the item returned from the service.</typeparam>
@@ -29,10 +28,10 @@ namespace Linq2Rest.Implementations
         /// <param name="knownTypes"><see cref="Type"/> to be known by the serializer.</param>
         public XmlContext(Uri source, params Type[] knownTypes)
             : base(new XmlRestClient(source), new XmlDataContractSerializerFactory(knownTypes))
-		{
-			CustomContract.Requires<ArgumentNullException>(source != null);
-			CustomContract.Requires<ArgumentNullException>(knownTypes != null);
-			CustomContract.Requires<ArgumentException>(source.Scheme == HttpUtility.UriSchemeHttp || source.Scheme == HttpUtility.UriSchemeHttps);
+        {
+            CustomContract.Requires<ArgumentNullException>(source != null);
+            CustomContract.Requires<ArgumentNullException>(knownTypes != null);
+            CustomContract.Requires<ArgumentException>(source.Scheme == HttpUtility.UriSchemeHttp || source.Scheme == HttpUtility.UriSchemeHttps);
         }
     }
 }

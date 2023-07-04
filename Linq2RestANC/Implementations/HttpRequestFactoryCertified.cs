@@ -11,10 +11,9 @@
 
 namespace Linq2Rest.Implementations
 {
+    using Provider;
     using System;
     using System.Security.Cryptography.X509Certificates;
-    using Provider;
-    using System.Net.Http;
 
     /// <summary>
     /// Creates an IHttpRequest with the given certificate attached to it

@@ -12,23 +12,22 @@
 
 namespace Linq2Rest.Provider.Writers
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Linq.Expressions;
+    using System;
+    using System.Linq.Expressions;
 
-	internal class MathCeilingMethodWriter : MathMethodWriter
-	{
-		protected override string MethodName
-		{
-			get { return "ceiling"; }
-		}
+    internal class MathCeilingMethodWriter : MathMethodWriter
+    {
+        protected override string MethodName
+        {
+            get { return "ceiling"; }
+        }
 
-		public override bool CanHandle(MethodCallExpression expression)
-		{
-			CustomContract.Assert(expression.Method != null);
+        public override bool CanHandle(MethodCallExpression expression)
+        {
+            CustomContract.Assert(expression.Method != null);
 
-			return expression.Method.DeclaringType == typeof(Math)
-				   && expression.Method.Name == "Ceiling";
-		}
-	}
+            return expression.Method.DeclaringType == typeof(Math)
+                   && expression.Method.Name == "Ceiling";
+        }
+    }
 }

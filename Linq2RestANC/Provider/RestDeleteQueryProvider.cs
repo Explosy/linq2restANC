@@ -12,63 +12,62 @@
 
 namespace Linq2Rest.Provider
 {
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using System.Diagnostics.Contracts;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using Linq2Rest.Provider.Writers;
+    using Linq2Rest.Provider.Writers;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
 
-	internal class RestDeleteQueryProvider<T> : RestQueryProvider<T>
-	{
-		public RestDeleteQueryProvider(IRestClient client, ISerializerFactory serializerFactory, IExpressionProcessor expressionProcessor, IMemberNameResolver memberNameResolver, IEnumerable<IValueWriter> valueWriters, Type sourceType)
-			: base(client, serializerFactory, expressionProcessor, memberNameResolver, valueWriters, sourceType)
-		{
-			CustomContract.Requires(client != null);
-			CustomContract.Requires(serializerFactory != null);
-			CustomContract.Requires(expressionProcessor != null);
-			CustomContract.Requires(valueWriters != null);
-		}
+    internal class RestDeleteQueryProvider<T> : RestQueryProvider<T>
+    {
+        public RestDeleteQueryProvider(IRestClient client, ISerializerFactory serializerFactory, IExpressionProcessor expressionProcessor, IMemberNameResolver memberNameResolver, IEnumerable<IValueWriter> valueWriters, Type sourceType)
+            : base(client, serializerFactory, expressionProcessor, memberNameResolver, valueWriters, sourceType)
+        {
+            CustomContract.Requires(client != null);
+            CustomContract.Requires(serializerFactory != null);
+            CustomContract.Requires(expressionProcessor != null);
+            CustomContract.Requires(valueWriters != null);
+        }
 
-		protected override Func<IRestClient, ISerializerFactory, IMemberNameResolver, IEnumerable<IValueWriter>, Expression, Type, IQueryable<TResult>> CreateQueryable<TResult>()
-		{
-			return InnerCreateQueryable<TResult>;
-		}
+        protected override Func<IRestClient, ISerializerFactory, IMemberNameResolver, IEnumerable<IValueWriter>, Expression, Type, IQueryable<TResult>> CreateQueryable<TResult>()
+        {
+            return InnerCreateQueryable<TResult>;
+        }
 
-		protected override IEnumerable<T> GetResults(ParameterBuilder builder)
-		{
-			var fullUri = builder.GetFullUri();
-			var response = Client.Delete(fullUri);
-			var serializer = GetSerializer(builder.SourceType);
-			var resultSet = serializer.DeserializeList(response);
+        protected override IEnumerable<T> GetResults(ParameterBuilder builder)
+        {
+            var fullUri = builder.GetFullUri();
+            var response = Client.Delete(fullUri);
+            var serializer = GetSerializer(builder.SourceType);
+            var resultSet = serializer.DeserializeList(response);
 
-			CustomContract.Assume(resultSet != null);
+            CustomContract.Assume(resultSet != null);
 
-			return resultSet;
-		}
+            return resultSet;
+        }
 
-		protected override IEnumerable GetIntermediateResults(Type type, ParameterBuilder builder)
-		{
-			var fullUri = builder.GetFullUri();
-			var response = Client.Delete(fullUri);
+        protected override IEnumerable GetIntermediateResults(Type type, ParameterBuilder builder)
+        {
+            var fullUri = builder.GetFullUri();
+            var response = Client.Delete(fullUri);
 
-			dynamic serializer = GetSerializer(type, builder.SourceType);
-			var resultSet = serializer.DeserializeList(response);
+            dynamic serializer = GetSerializer(type, builder.SourceType);
+            var resultSet = serializer.DeserializeList(response);
 
-			return resultSet;
-		}
+            return resultSet;
+        }
 
-		private IQueryable<TResult> InnerCreateQueryable<TResult>(IRestClient client, ISerializerFactory serializerFactory, IMemberNameResolver memberNameResolver, IEnumerable<IValueWriter> valueWriters, Expression expression, Type sourceType)
-		{
-			CustomContract.Requires(client != null);
-			CustomContract.Requires(serializerFactory != null);
-			CustomContract.Requires(memberNameResolver != null);
-			CustomContract.Requires(valueWriters != null);
-			CustomContract.Requires(expression != null);
-			CustomContract.Requires(sourceType != null);
+        private IQueryable<TResult> InnerCreateQueryable<TResult>(IRestClient client, ISerializerFactory serializerFactory, IMemberNameResolver memberNameResolver, IEnumerable<IValueWriter> valueWriters, Expression expression, Type sourceType)
+        {
+            CustomContract.Requires(client != null);
+            CustomContract.Requires(serializerFactory != null);
+            CustomContract.Requires(memberNameResolver != null);
+            CustomContract.Requires(valueWriters != null);
+            CustomContract.Requires(expression != null);
+            CustomContract.Requires(sourceType != null);
 
-			return new RestDeleteQueryable<TResult>(client, serializerFactory, memberNameResolver, valueWriters, expression, sourceType);
-		}
-	}
+            return new RestDeleteQueryable<TResult>(client, serializerFactory, memberNameResolver, valueWriters, expression, sourceType);
+        }
+    }
 }

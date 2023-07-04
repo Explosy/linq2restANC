@@ -12,34 +12,33 @@
 
 namespace Linq2Rest.Provider.Writers
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Linq.Expressions;
+    using System;
+    using System.Linq.Expressions;
 
-	internal class StringStartsWithMethodWriter : IMethodCallWriter
-	{
-		public bool CanHandle(MethodCallExpression expression)
-		{
-			CustomContract.Assert(expression.Method != null);
+    internal class StringStartsWithMethodWriter : IMethodCallWriter
+    {
+        public bool CanHandle(MethodCallExpression expression)
+        {
+            CustomContract.Assert(expression.Method != null);
 
-			return expression.Method.DeclaringType == typeof(string)
-				   && expression.Method.Name == "StartsWith";
-		}
+            return expression.Method.DeclaringType == typeof(string)
+                   && expression.Method.Name == "StartsWith";
+        }
 
-		public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
-		{
-			CustomContract.Assume(expression.Arguments.Count > 0);
+        public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
+        {
+            CustomContract.Assume(expression.Arguments.Count > 0);
 
-			var argumentExpression = expression.Arguments[0];
-			var obj = expression.Object;
+            var argumentExpression = expression.Arguments[0];
+            var obj = expression.Object;
 
-			CustomContract.Assume(obj != null);
-			CustomContract.Assume(argumentExpression != null);
+            CustomContract.Assume(obj != null);
+            CustomContract.Assume(argumentExpression != null);
 
-			return string.Format(
-				"startswith({0}, {1})", 
-				expressionWriter(obj), 
-				expressionWriter(argumentExpression));
-		}
-	}
+            return string.Format(
+                "startswith({0}, {1})",
+                expressionWriter(obj),
+                expressionWriter(argumentExpression));
+        }
+    }
 }

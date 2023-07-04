@@ -12,38 +12,37 @@
 
 namespace Linq2Rest.Provider.Writers
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Linq.Expressions;
+    using System;
+    using System.Linq.Expressions;
 
-	internal class StringReplaceMethodWriter : IMethodCallWriter
-	{
-		public bool CanHandle(MethodCallExpression expression)
-		{
-			CustomContract.Assert(expression.Method != null);
+    internal class StringReplaceMethodWriter : IMethodCallWriter
+    {
+        public bool CanHandle(MethodCallExpression expression)
+        {
+            CustomContract.Assert(expression.Method != null);
 
-			return expression.Method.DeclaringType == typeof(string)
-				   && expression.Method.Name == "Replace";
-		}
+            return expression.Method.DeclaringType == typeof(string)
+                   && expression.Method.Name == "Replace";
+        }
 
-		public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
-		{
-			CustomContract.Assert(expression.Arguments != null);
-			CustomContract.Assume(expression.Arguments.Count > 1);
+        public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
+        {
+            CustomContract.Assert(expression.Arguments != null);
+            CustomContract.Assume(expression.Arguments.Count > 1);
 
-			var firstArgument = expression.Arguments[0];
-			var secondArgument = expression.Arguments[1];
-			var obj = expression.Object;
+            var firstArgument = expression.Arguments[0];
+            var secondArgument = expression.Arguments[1];
+            var obj = expression.Object;
 
-			CustomContract.Assume(firstArgument != null);
-			CustomContract.Assume(secondArgument != null);
-			CustomContract.Assume(obj != null);
+            CustomContract.Assume(firstArgument != null);
+            CustomContract.Assume(secondArgument != null);
+            CustomContract.Assume(obj != null);
 
-			return string.Format(
-				"replace({0}, {1}, {2})", 
-				expressionWriter(obj), 
-				expressionWriter(firstArgument), 
-				expressionWriter(secondArgument));
-		}
-	}
+            return string.Format(
+                "replace({0}, {1}, {2})",
+                expressionWriter(obj),
+                expressionWriter(firstArgument),
+                expressionWriter(secondArgument));
+        }
+    }
 }

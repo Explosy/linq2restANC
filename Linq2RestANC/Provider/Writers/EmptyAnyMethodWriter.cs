@@ -12,49 +12,48 @@
 
 namespace Linq2Rest.Provider.Writers
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Reflection;
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Reflection;
 
-	internal class EmptyAnyMethodWriter : IMethodCallWriter
-	{
-		private static readonly MethodInfo AnyMethod = typeof(Enumerable)
+    internal class EmptyAnyMethodWriter : IMethodCallWriter
+    {
+        private static readonly MethodInfo AnyMethod = typeof(Enumerable)
 #if !NETFX_CORE
 .GetMethods()
 #else
 .GetRuntimeMethods()
 #endif
 .FirstOrDefault(m => m.Name == "Any" && m.GetParameters()
-													 .Length == 2);
+                                                     .Length == 2);
 
-		public bool CanHandle(MethodCallExpression expression)
-		{
-			CustomContract.Assert(expression.Method != null);
+        public bool CanHandle(MethodCallExpression expression)
+        {
+            CustomContract.Assert(expression.Method != null);
 
-			return expression.Method.Name == "Any" && expression.Arguments.Count == 1;
-		}
+            return expression.Method.Name == "Any" && expression.Arguments.Count == 1;
+        }
 
-		public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
-		{
-			CustomContract.Assume(expression.Arguments.Count > 0);
+        public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
+        {
+            CustomContract.Assume(expression.Arguments.Count > 0);
 
 #if !NETFX_CORE
 			var argumentType = expression.Arguments[0].Type;
 #else
-			var argumentType = expression.Arguments[0].Type.GetTypeInfo();
+            var argumentType = expression.Arguments[0].Type.GetTypeInfo();
 #endif
-			var parameterType = argumentType.IsGenericType
+            var parameterType = argumentType.IsGenericType
                 ? argumentType.GetGenericArguments()[0]
                 : typeof(object);
-			var anyMethod = AnyMethod.MakeGenericMethod(parameterType);
+            var anyMethod = AnyMethod.MakeGenericMethod(parameterType);
 
-			var parameter = Expression.Parameter(parameterType);
+            var parameter = Expression.Parameter(parameterType);
 
-			var lambda = Expression.Lambda(Expression.Constant(true), parameter);
-			var rewritten = Expression.Call(expression.Object, anyMethod, expression.Arguments[0], lambda);
-			return expressionWriter(rewritten);
-		}
-	}
+            var lambda = Expression.Lambda(Expression.Constant(true), parameter);
+            var rewritten = Expression.Call(expression.Object, anyMethod, expression.Arguments[0], lambda);
+            return expressionWriter(rewritten);
+        }
+    }
 }
