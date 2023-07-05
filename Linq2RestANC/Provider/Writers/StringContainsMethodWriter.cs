@@ -37,9 +37,9 @@ namespace Linq2Rest.Provider.Writers
             CustomContract.Assume(argumentExpression != null);
 
             return string.Format(
-                "substringof({0}, {1})",
-                expressionWriter(argumentExpression),
-                expressionWriter(obj));
+                "contains({0},{1})",
+                expressionWriter(obj),
+                expressionWriter(argumentExpression));
         }
     }
 }
